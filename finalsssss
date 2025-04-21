@@ -2,51 +2,51 @@ from datetime import datetime
 
 class User:
     def __init__(self, user_id, name, email, phone_number):
-        self.user_id = user_id
-        self.name = name
-        self.email = email
-        self.phone_number = phone_number
+        self.user_id = user_id # Unique identifier for the user
+        self.name = name # Full name of the user
+        self.email = email # User's email address
+        self.phone_number = phone_number # Contact phone number
 
-class Customer(User):
+class Customer(User): # Customer inheritence from User
     def __init__(self, user_id, name, email, phone_number):
         super().__init__(user_id, name, email, phone_number)
-        self.purchase_history = []
-        self.account_created = datetime.now()
-        self.wallet_balance = 0.0
+        self.purchase_history = [] # List to track past orders
+        self.account_created = datetime.now() # Account creation timestamp
+        self.wallet_balance = 0.0 # Initial wallet balance
 
-class Admin(User):
+class Admin(User): # Admin inheritence from User
     def __init__(self, user_id, name, email, phone_number):
         super().__init__(user_id, name, email, phone_number)
-        self.is_active = True
-        self.permissions = []
-        self.capacity = 0
+        self.is_active = True # Admin account status
+        self.permissions = [] # List of permission strings
+        self.capacity = 0 # Admin management capacity or level
 
-class Ticket:
+class Ticket:# Ticket Class
     def __init__(self, ticket_id, ticket_type, price, validity):
-        self.ticket_id = ticket_id
-        self.ticket_type = ticket_type
-        self.price = price
-        self.validity = validity
-        self.issue_date = datetime.now()
+        self.ticket_id = ticket_id # Unique ticket ID
+        self.ticket_type = ticket_type # Type/category of ticket
+        self.price = price # Price of the ticket
+        self.validity = validity # Validity period or description
+        self.issue_date = datetime.now() # When the ticket was issued
 
-class Event:
+class Event:# Event Class
     def __init__(self, event_id, event_name, date, location, description):
-        self.event_id = event_id
-        self.event_name = event_name
-        self.date = date
-        self.location = location
-        self.description = description
-        self.tickets = []  # Composition
+        self.event_id = event_id # Unique event ID
+        self.event_name = event_name # Name/title of the event
+        self.date = date # Scheduled date of the event
+        self.location = location # Venue or location of the event
+        self.description = description # Event details
+        self.tickets = []  # Composition: list of Ticket objects
 
     def add_ticket(self, ticket):
-        self.tickets.append(ticket)
+        self.tickets.append(ticket) # Add ticket to event's ticket list
 
-class Discount:
+class Discount: # Discount Class
     def __init__(self, discount_id, percentage, applicable_ticket_types, valid_until):
-        self.discount_id = discount_id
-        self.percentage = percentage
-        self.applicable_ticket_types = applicable_ticket_types
-        self.valid_until = valid_until
+        self.discount_id = discount_id # Unique ID for the discount
+        self.percentage = percentage # Discount percentage value
+        self.applicable_ticket_types = applicable_ticket_types # Eligible ticket types
+        self.valid_until = valid_until # Expiry date for the discount
 
     def calculate_discount(self, price):
         try:
@@ -57,51 +57,51 @@ class Discount:
 
 class Order:
     def __init__(self, order_id, customer, discount=None):
-        self.order_id = order_id
-        self.customer = customer
-        self.tickets = []  # Aggregation
-        self.discount = discount
-        self.order_date = datetime.now()
+        self.order_id = order_id # Unique order ID
+        self.customer = customer # Customer object placing the order
+        self.tickets = []  # Aggregation: list of Ticket objects
+        self.discount = discount # Optional Discount object
+        self.order_date = datetime.now() # Order creation timestamp
 
     def add_ticket(self, ticket):
-        self.tickets.append(ticket)
+        self.tickets.append(ticket) # Add ticket to the order
 
     def get_total_amount(self):
         try:
-            total = sum(ticket.price for ticket in self.tickets)
+            total = sum(ticket.price for ticket in self.tickets) # Calculate total before discount
             if self.discount:
-                total = self.discount.calculate_discount(total)
+                total = self.discount.calculate_discount(total) # Apply discount if present
             return total
         except Exception as e:
             print(f"Error calculating total amount: {e}")
             return 0
-class Payment:
+class Payment: # Payment Class
     def __init__(self, payment_id, amount, method, order, discount=None):
-        self.payment_id = payment_id
-        self.original_amount = amount
-        self.discount = discount
-        self.method = method
-        self.payment_date = datetime.now()
-        self.payment_status = False
-        self.order = order
+        self.payment_id = payment_id # Unique payment ID
+        self.original_amount = amount # Amount paid before/after discount
+        self.discount = discount # Optional Discount object
+        self.method = method # Payment method (e.g., card, cash)
+        self.payment_date = datetime.now() # Timestamp of payment
+        self.payment_status = False # Payment status flag
+        self.order = order # Linked Order object
 
     def process_payment(self):
         try:
-            self.payment_status = True
+            self.payment_status = True # Mark payment as processed
             return True
         except Exception as e:
             print(f"Payment failed: {e}")
             return False
 
-class Invoice:
+class Invoice: # Invoice Class
     def __init__(self, invoice_id, order, payment):
-        self.invoice_id = invoice_id
-        self.order = order
-        self.customer = order.customer
-        self.payment = payment
-        self.total_amount = payment.original_amount
-        self.issue_date = datetime.now()
-        self.status = "Paid" if payment.payment_status else "Pending"
+        self.invoice_id = invoice_id # Unique invoice ID
+        self.order = order # Related Order object
+        self.customer = order.customer # Customer who made the order
+        self.payment = payment # Related Payment object
+        self.total_amount = payment.original_amount # Total charged amount
+        self.issue_date = datetime.now() # Date the invoice was issued
+        self.status = "Paid" if payment.payment_status else "Pending" # Invoice status
 
 
 # ----------------------------
