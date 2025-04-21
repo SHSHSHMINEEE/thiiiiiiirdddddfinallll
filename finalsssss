@@ -1,0 +1,181 @@
+from datetime import datetime
+
+class User:
+    def __init__(self, user_id, name, email, phone_number):
+        self.user_id = user_id
+        self.name = name
+        self.email = email
+        self.phone_number = phone_number
+
+class Customer(User):
+    def __init__(self, user_id, name, email, phone_number):
+        super().__init__(user_id, name, email, phone_number)
+        self.purchase_history = []
+        self.account_created = datetime.now()
+        self.wallet_balance = 0.0
+
+class Admin(User):
+    def __init__(self, user_id, name, email, phone_number):
+        super().__init__(user_id, name, email, phone_number)
+        self.is_active = True
+        self.permissions = []
+        self.capacity = 0
+
+class Ticket:
+    def __init__(self, ticket_id, ticket_type, price, validity):
+        self.ticket_id = ticket_id
+        self.ticket_type = ticket_type
+        self.price = price
+        self.validity = validity
+        self.issue_date = datetime.now()
+
+class Event:
+    def __init__(self, event_id, event_name, date, location, description):
+        self.event_id = event_id
+        self.event_name = event_name
+        self.date = date
+        self.location = location
+        self.description = description
+        self.tickets = []  # Composition
+
+    def add_ticket(self, ticket):
+        self.tickets.append(ticket)
+
+class Discount:
+    def __init__(self, discount_id, percentage, applicable_ticket_types, valid_until):
+        self.discount_id = discount_id
+        self.percentage = percentage
+        self.applicable_ticket_types = applicable_ticket_types
+        self.valid_until = valid_until
+
+    def calculate_discount(self, price):
+        try:
+            return price * (1 - self.percentage / 100)
+        except Exception as e:
+            print(f"Error calculating discount: {e}")
+            return price
+
+class Order:
+    def __init__(self, order_id, customer, discount=None):
+        self.order_id = order_id
+        self.customer = customer
+        self.tickets = []  # Aggregation
+        self.discount = discount
+        self.order_date = datetime.now()
+
+    def add_ticket(self, ticket):
+        self.tickets.append(ticket)
+
+    def get_total_amount(self):
+        try:
+            total = sum(ticket.price for ticket in self.tickets)
+            if self.discount:
+                total = self.discount.calculate_discount(total)
+            return total
+        except Exception as e:
+            print(f"Error calculating total amount: {e}")
+            return 0
+class Payment:
+    def __init__(self, payment_id, amount, method, order, discount=None):
+        self.payment_id = payment_id
+        self.original_amount = amount
+        self.discount = discount
+        self.method = method
+        self.payment_date = datetime.now()
+        self.payment_status = False
+        self.order = order
+
+    def process_payment(self):
+        try:
+            self.payment_status = True
+            return True
+        except Exception as e:
+            print(f"Payment failed: {e}")
+            return False
+
+class Invoice:
+    def __init__(self, invoice_id, order, payment):
+        self.invoice_id = invoice_id
+        self.order = order
+        self.customer = order.customer
+        self.payment = payment
+        self.total_amount = payment.original_amount
+        self.issue_date = datetime.now()
+        self.status = "Paid" if payment.payment_status else "Pending"
+
+
+# ----------------------------
+# Test Cases
+# ----------------------------
+
+
+def test_case_1():
+    print("--- Test Case 1 ---")
+    admin = Admin("a001", "Admin Aisha", "admin@example.com", "0508888888")
+    customer = Customer("c001", "John Doe", "john@example.com", "0501234567")
+    event = Event(10, "Tech Expo", datetime(2025, 11, 5), "Abu Dhabi", "Technology showcase")
+    ticket1 = Ticket(201, "Gold", 800.0, "Full Day")
+    ticket2 = Ticket(202, "Silver", 400.0, "Half Day")
+    event.add_ticket(ticket1)
+    event.add_ticket(ticket2)
+    discount = Discount(301, 20, ["Gold"], datetime(2025, 12, 31))
+    order = Order(401, customer, discount)
+    order.add_ticket(ticket1)
+    total = order.get_total_amount()
+    payment = Payment(501, total, "Debit Card", order, discount)
+    payment.process_payment()
+    invoice = Invoice(601, order, payment)
+
+    print("Admin:")
+    print(f"  ID: {admin.user_id}\n  Name: {admin.name}\n  Email: {admin.email}\n  Phone: {admin.phone_number}")
+    print("\nCustomer:")
+    print(f"  ID: {customer.user_id}\n  Name: {customer.name}\n  Email: {customer.email}\n  Wallet Balance: {customer.wallet_balance}\n  Account Created: {customer.account_created}")
+    print("\nEvent:")
+    print(f"  ID: {event.event_id}\n  Name: {event.event_name}\n  Date: {event.date}\n  Location: {event.location}\n  Description: {event.description}")
+    print("  Tickets:")
+    for t in event.tickets:
+        print(f"    Ticket:\n      ID: {t.ticket_id}\n      Type: {t.ticket_type}\n      Price: {t.price}\n      Validity: {t.validity}\n      Issue Date: {t.issue_date}")
+    print("\nOrder:")
+    print(f"  ID: {order.order_id}\n  Date: {order.order_date}\n  Total After Discount: {total}")
+    print("\nPayment:")
+    print(f"  ID: {payment.payment_id}\n  Method: {payment.method}\n  Status: {payment.payment_status}\n  Date: {payment.payment_date}")
+    print("\nInvoice:")
+    print(f"  ID: {invoice.invoice_id}\n  Total: {invoice.total_amount}\n  Status: {invoice.status}\n  Issue Date: {invoice.issue_date}")
+
+
+def test_case_2():
+    print("\n--- Test Case 2 ---")
+    admin = Admin("a002", "Admin Omar", "omar@example.com", "0509999999")
+    customer = Customer("c002", "Sara Smith", "sara@example.com", "0507654321")
+    event = Event(11, "Food Festival", datetime(2025, 12, 10), "Sharjah", "International food stalls")
+    ticket1 = Ticket(203, "Entry", 100.0, "1 day")
+    ticket2 = Ticket(204, "VIP Entry", 300.0, "1 day")
+    event.add_ticket(ticket1)
+    event.add_ticket(ticket2)
+    discount = Discount(302, 15, ["VIP Entry"], datetime(2025, 12, 31))
+    order = Order(402, customer, discount)
+    order.add_ticket(ticket2)
+    total = order.get_total_amount()
+    payment = Payment(502, total, "Cash", order, discount)
+    payment.process_payment()
+    invoice = Invoice(602, order, payment)
+
+    print("Admin:")
+    print(f"  ID: {admin.user_id}\n  Name: {admin.name}\n  Email: {admin.email}\n  Phone: {admin.phone_number}")
+    print("\nCustomer:")
+    print(f"  ID: {customer.user_id}\n  Name: {customer.name}\n  Email: {customer.email}\n  Wallet Balance: {customer.wallet_balance}\n  Account Created: {customer.account_created}")
+    print("\nEvent:")
+    print(f"  ID: {event.event_id}\n  Name: {event.event_name}\n  Date: {event.date}\n  Location: {event.location}\n  Description: {event.description}")
+    print("  Tickets:")
+    for t in event.tickets:
+        print(f"    Ticket:\n      ID: {t.ticket_id}\n      Type: {t.ticket_type}\n      Price: {t.price}\n      Validity: {t.validity}\n      Issue Date: {t.issue_date}")
+    print("\nOrder:")
+    print(f"  ID: {order.order_id}\n  Date: {order.order_date}\n  Total After Discount: {total}")
+    print("\nPayment:")
+    print(f"  ID: {payment.payment_id}\n  Method: {payment.method}\n  Status: {payment.payment_status}\n  Date: {payment.payment_date}")
+    print("\nInvoice:")
+    print(f"  ID: {invoice.invoice_id}\n  Total: {invoice.total_amount}\n  Status: {invoice.status}\n  Issue Date: {invoice.issue_date}")
+
+# Run Test Cases
+test_case_1()
+test_case_2()
