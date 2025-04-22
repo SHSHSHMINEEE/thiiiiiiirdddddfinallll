@@ -1,70 +1,79 @@
 from datetime import datetime
+from tkinter.constants import ACTIVE
 
 
 class User:
-    def __init__(self, user_id, name, email, phone_number):
+    def __init__(self, user_id, name, age, email, phone_number):
         self.user_id = user_id  # Unique identifier for the user
         self.name = name  # Full name of the user
+        self.age = age
         self.email = email  # User's email address
         self.phone_number = phone_number  # Contact phone number
 
     def getUserId(self):  # Getter method to access user_id
         return self.user_id  # Return the user's unique ID
-
     def setUserId(self, user_id):  # Setter method to modify user_id
         self.user_id = user_id  # Set the user's ID
 
     def getName(self):  # Getter method to access name
         return self.name  # Return the user's full name
-
     def setName(self, name):  # Setter method to modify name
         self.name = name  # Set the user's name
 
+    def getAge(self):  # Getter method for age
+        return self.age  # Return the user's age
+    def setAge(self, age):  # Setter method for age
+        try:
+            if age < 18:  # Check if new age is below 18
+                raise ValueError("User is not eligible. Age must be 18 or older.")  # Raise error for underage
+            self.age = age  # Set age if valid
+        except ValueError as e:  # Catch validation error
+            print(f"Error: {e}")  # Print error message
+
     def getEmail(self):  # Getter method to access email
         return self.email  # Return the user's email address
-
     def setEmail(self, email):  # Setter method to modify email
         self.email = email  # Set the user's email address
 
     def getPhoneNumber(self):  # Getter method to access phone number
         return self.phone_number  # Return the user's contact number
-
     def setPhoneNumber(self, phone_number):  # Setter method to modify phone number
         self.phone_number = phone_number  # Set the user's contact number
 
     def login(self, input_email, input_phone):  # Method to simulate user login
         return self.email == input_email and self.phone_number == input_phone  # Check credentials and return login status
 
-    def update_details(self, name=None, email=None, phone_number=None):  # Method to update user details
+    def update_details(self, name=None, age = None, email=None, phone_number=None):  # Method to update user details
         if name:
             self.name = name  # Update name if provided
+
+        if age is not None:
+            self.setAge(age)
+
         if email:
             self.email = email  # Update email if provided
         if phone_number:
             self.phone_number = phone_number  # Update phone number if provided
 
 class Customer(User):  # Customer class that extends the User class
-    def __init__(self, user_id, name, email, phone_number):  # Constructor with inherited parameters
-        super().__init__(user_id, name, email, phone_number)  # Call parent constructor
+    def __init__(self, user_id, name, age, email, phone_number):  # Constructor with inherited parameters
+        super().__init__(user_id, name, age, email, phone_number)  # Call parent constructor
         self.purchase_history = []  # List to track past orders
         self.account_created = datetime.now()  # Account creation timestamp
         self.wallet_balance = 0.0  # Initial wallet balance
 
     def getPurchaseHistory(self):  # Getter for purchase_history
         return self.purchase_history  # Return the list of past purchases
-
     def setPurchaseHistory(self, purchase_history):  # Setter for purchase_history
         self.purchase_history = purchase_history  # Set the purchase history
 
     def getAccountCreated(self):  # Getter for account_created timestamp
         return self.account_created  # Return the account creation timestamp
-
     def setAccountCreated(self, account_created):  # Setter for account_created timestamp
         self.account_created = account_created  # Set the account creation date
 
     def getWalletBalance(self):  # Getter for wallet_balance
         return self.wallet_balance  # Return the wallet balance amount
-
     def setWalletBalance(self, wallet_balance):  # Setter for wallet_balance
         self.wallet_balance = wallet_balance  # Set the wallet balance amount
 
@@ -88,8 +97,8 @@ class Customer(User):  # Customer class that extends the User class
         return True  # Assume tickets are found
 
 class Admin(User):  # Admin class that extends the User class
-    def __init__(self, user_id, name, email, phone_number):  # Constructor with inherited parameters
-        super().__init__(user_id, name, email, phone_number)  # Call parent constructor
+    def __init__(self, user_id, name, age, email, phone_number):  # Constructor with inherited parameters
+        super().__init__(user_id, name, age, email, phone_number)  # Call parent constructor
         self.is_active = True  # Flag to check if admin account is active
         self.permissions = []  # List of admin permissions
         self.capacity = 0  # Admin responsibility level or load
@@ -119,12 +128,12 @@ class Admin(User):  # Admin class that extends the User class
         return "Tracking current ticket sales data."
 
 class Ticket:  # Ticket class to represent an individual ticket
-    def __init__(self, ticket_id, ticket_type, price, validity, issue_date):  # Constructor with ticket details
-        self.ticket_id = "ticket_id"  # Unique ticket ID
-        self.ticket_type = "ticket_type"  # Type/category of the ticket (e.g., VIP, Standard)
-        self.price = 0.0  # Ticket price
-        self.validity = "validity"  # Validity of the ticket (e.g., 1 day)
-        self.issue_date = datetime.now()  # Issue date and time of the ticket
+    def __init__(self, ticket_id, ticket_type, price, validity, race_date):  # Constructor with ticket details
+        self.ticket_id = ticket_id  # Unique ticket ID
+        self.ticket_type = ticket_type  # Type/category of the ticket (e.g., VIP, Standard)
+        self.price = price  # Ticket price
+        self.validity = validity  # Validity of the ticket (e.g., 1 day)
+        self.race_date = datetime.now()  # Race date and time of the ticket
 
     def getTicketId(self):  # Getter for ticket_id
         return self.ticket_id  # Return the ticket's unique ID
@@ -146,10 +155,10 @@ class Ticket:  # Ticket class to represent an individual ticket
     def setValidity(self, validity):  # Setter for validity
         self.validity = validity  # Set the ticket's validity duration or description
 
-    def getRaceDate(self):  # Getter for issue_date
-        return self.issue_date  # Return the ticket's issue date
-    def setRaceDate(self, race_date):  # Setter for issue_date
-        self.issue_date = race_date  # Set the ticket's issue date
+    def getRaceDate(self):  # Getter for race_date
+        return self.race_date  # Return the ticket's race date
+    def setRaceDate(self, race_date):  # Setter for race_date
+        self.race_date = race_date  # Set the ticket's race date
 
     def numberOfTicket(self):  # Method to simulate quantity of tickets (assumed 1 per object)
         return 1  # Each Ticket instance represents one ticket
@@ -157,17 +166,16 @@ class Ticket:  # Ticket class to represent an individual ticket
     def calculateTotalPrice(self):  # Method to calculate total price
         return self.price * self.numberOfTicket()  # Return price times quantity
 
-    def recieveNotification(self):  # Method to simulate receiving a notification
-        return f"Notification: Your ticket {self.ticket_id} is confirmed."
 
 class Event:  # Event Class # Event class to represent an event that contains tickets
-    def __init__(self, event_id, event_name, date, location, description):  # Constructor with event details
+    def __init__(self, event_id, event_name, date, location, description, tickets_available, ticketsList=[]):  # Constructor with event details
         self.event_id = event_id  # Unique event ID
         self.event_name = event_name  # Name/title of the event
         self.date = date  # Scheduled date of the event
         self.location = location  # Venue or location of the event
         self.description = description  # Event details
-        self.tickets = []  # Composition: list of Ticket objects
+        self.tickets_available = tickets_available  # Number of available tickets
+        self.ticketsList = []  # Composition: list of Ticket objects
 
     def getEventId(self):  # Getter for event_id
         return self.event_id  # Return the event's unique ID
@@ -194,15 +202,24 @@ class Event:  # Event Class # Event class to represent an event that contains ti
     def setDescription(self, description):  # Setter for description
         self.description = description  # Set the event's description
 
-    def getTickets(self):  # Getter for tickets list
-        return self.tickets  # Return the list of associated tickets
-    def setTickets(self, tickets):  # Setter for tickets list
-        self.tickets = tickets  # Set the list of associated tickets
+    def getTicketsList(self):  # Getter for tickets list
+        return self.ticketsList  # Return the list of associated tickets
+    def setTicketsList(self, tickets):  # Setter for tickets list
+        self.ticketsList = tickets  # Set the list of associated tickets
 
-    def getTicketList(self):  # Additional getter for ticket list
-        return self.tickets  # Return the full ticket list
-    def setTicketList(self, ticketList):  # Additional setter for ticket list
-        self.tickets = ticketList  # Set the list of ticket objects
+    def getTicketsAvailable(self):
+        return self.tickets_available
+    def setTicketsAvailable(self, tickets_available):
+        self.tickets_available = tickets_available
+
+    def eventDetails(self):  # Method to return a formatted string of event details
+        return (f"Event ID: {self.event_id}\n"
+                f"Event Name: {self.event_name}\n"
+                f"Date: {self.date.strftime('%Y-%m-%d') if isinstance(self.date, datetime) else self.date}\n"
+                f"Location: {self.location}\n"
+                f"Description: {self.description}\n"
+                f"Tickets Available: {self.tickets_available}\n"
+                f"Number of Tickets Listed: {len(self.ticketsList)}")
 
     def add_ticket(self, ticket_id, ticket_type, price, validity, issue_date):  # Method to add a ticket to the event
         t = Ticket(ticket_id, ticket_type, price, validity, issue_date)  # Add ticket to event's ticket list
@@ -211,10 +228,10 @@ class Event:  # Event Class # Event class to represent an event that contains ti
         t.__setattr__("price", price)
         t.__setattr__("validity", validity)
         t.__setattr__("issue_date", issue_date)
-        self.tickets.append(t)  # Append it to the event's ticket list
+        self.ticketsList.append(t)  # Append it to the event's ticket list
 
     def displayTicket(self):
-        for t in self.tickets:
+        for t in self.ticketsList:
             print(t)
 
 class Discount:  # Discount class to represent a discount offer
@@ -254,7 +271,7 @@ class Discount:  # Discount class to represent a discount offer
 
 
 class Order:  # Order class to represent a customer's order
-    def __init__(self, order_id, customer, discount=None):  # Constructor to initialize order details
+    def __init__(self, order_id, customer, tickets, totalAmount = 0.0, discount=None, order_date=None):  # Constructor to initialize order details
         self.order_id = order_id  # Unique order ID
         self.customer = customer  # Customer object placing the order
         self.tickets = []  # Aggregation: list of Ticket objects
@@ -277,16 +294,8 @@ class Order:  # Order class to represent a customer's order
     def setTickets(self, tickets):  # Setter for ticket list
         self.tickets = tickets  # Set the list of tickets for the order
 
-    def getTotalAmount(self):  # Method to calculate total price of the order
-        try:
-            total = sum(ticket.price for ticket in self.tickets)  # Sum up prices of all tickets
-            if self.discount:
-                total = self.discount.calculate_discount(total)  # Apply discount if present
-            return total  # Return final total
-        except Exception as e:
-            print(f"Error calculating total amount: {e}")  # Handle any errors during calculation
-            return 0  # Return 0 if an error occurs
-
+    def getTotalAmount(self):
+        return self.applyDiscount()
     def setTotalAmount(self, total):  # setter for total amount (not typically used)
         pass  # usually calculated
 
@@ -300,19 +309,15 @@ class Order:  # Order class to represent a customer's order
     def setOrderDate(self, date):  # Setter for order date
         self.order_date = date  # Set the order's creation date
 
-    def isDiscountValid(self):  # Method to check if discount is still valid
+    def applyDiscount(self):
+        total = sum(ticket.price for ticket in self.tickets)
         if self.discount:
-            return self.discount.valid_until >= datetime.now()  # Return True if discount has not expired
-        return False  # No discount means invalid
-
-    def applyDiscount(self):  # Method to apply and return discount amount
-        if self.discount and self.isDiscountValid():
-            total = sum(ticket.price for ticket in self.tickets)  # Total price before discount
-            return self.discount.calculate_discount(total)  # Return discounted amount
-        return sum(ticket.price for ticket in self.tickets)  # Return full amount if no valid discount
+            discount_amount = total * (self.discount.percentage / 100)
+            return round(total - discount_amount, 2)
+        return round(total, 2)
 
     def viewOrderDetails(self):  # Method to return order details as string
-        return f"Order ID: {self.order_id}, Customer: {self.customer.name}, Tickets: {len(self.tickets)}, Total: {self.get_total_amount():.2f} AED"
+        return f"Order ID: {self.order_id}, Customer: {self.customer.name}, Tickets: {len(self.tickets)}, Total: {self.getTotalAmount():.2f} AED"
 
     def add_ticket(self, ticket):  # Method to add a ticket to the order
         self.tickets.append(ticket)  # Add ticket to the order
@@ -322,9 +327,9 @@ class Order:  # Order class to represent a customer's order
 
 
 class Payment:  # Payment class to represent a payment for an order
-    def __init__(self, payment_id, amount, method, order, discount=None):  # Constructor with payment details
+    def __init__(self, payment_id, original_amount, method, order, discount=None, payment_date=None, payment_status=False):  # Constructor with payment details
         self.payment_id = payment_id  # Unique ID for the payment
-        self.original_amount = amount  # Original amount before applying payment logic
+        self.original_amount = original_amount  # Original amount before applying payment logic
         self.discount = discount  # Optional discount applied during payment
         self.method = method  # Method used to make the payment (e.g., cash, card)
         self.payment_date = datetime.now()  # Timestamp of the payment
@@ -333,47 +338,62 @@ class Payment:  # Payment class to represent a payment for an order
 
     def getPaymentID(self):  # Getter for payment_id
         return self.payment_id  # Return the payment's unique ID
-
     def setPaymentID(self, payment_id):  # Setter for payment_id
         self.payment_id = payment_id  # Set the payment ID
 
     def getOriginalAmount(self):  # Getter for original_amount
         return self.original_amount  # Return the original payment amount
-
     def setOriginalAmount(self, amount):  # Setter for original_amount
         self.original_amount = amount  # Set the payment amount
 
+    def getDiscount(self):  # Getter method for the discount attribute
+        return self.discount  # Return the current discount object (if any)
+    def setDiscount(self, discount):  # Setter method for the discount attribute
+        self.discount = discount  # Set the discount object to the provided value
+
     def getPaymentMethod(self):  # Getter for method
         return self.method  # Return the payment method
-
     def setPaymentMethod(self, method):  # Setter for method
         self.method = method  # Set the payment method
 
     def getPaymentDate(self):  # Getter for payment_date
         return self.payment_date  # Return the payment date
-
     def setPaymentDate(self, date):  # Setter for payment_date
         self.payment_date = date  # Set the payment date
 
     def getPaymentStatus(self):  # Getter for payment_status
         return self.payment_status  # Return True if payment is successful
-
     def setPaymentStatus(self, status):  # Setter for payment_status
         self.payment_status = status  # Set the payment status flag
 
     def getOrder(self):  # Getter for associated order
         return self.order  # Return the associated order object
-
     def setOrder(self, order):  # Setter for associated order
         self.order = order  # Set the associated order object
 
     def process_payment(self):  # Method to mark payment as processed
         try:
-            self.payment_status = True  # Mark payment as processed
-            return True  # Return success flag
-        except Exception as e:
-            print(f"Payment failed: {e}")  # Print error message
-            return False  # Return failure flag
+            # Check if the payment method is 'credit card' (case-insensitive)
+            if self.method.lower() == "credit card":
+                # Prompt user to enter their credit card number
+                card_number = input("Enter your 16-digit credit card number: ")
+
+                # Check if the input is all digits and exactly 16 characters long
+                if not (card_number.isdigit() and len(card_number) == 16):
+                    # Raise an error if the card number is invalid
+                    raise ValueError("Invalid credit card number. Must be exactly 16 digits.")
+
+            # If all checks pass, mark the payment as successful
+            self.payment_status = True  # Set payment status to True
+            return True  # Return True indicating success
+
+        except ValueError as ve:  # Catch specific validation errors
+            print(f"Payment Error: {ve}")  # Print the validation error message
+            return False  # Return False indicating failure
+
+        except Exception as e:  # Catch any other unexpected errors
+            print(f"Unexpected Error: {e}")  # Print the unexpected error message
+            return False  # Return False indicating failure
 
     def generateReciept(self):  # Method to generate a simple receipt
         return (f"Receipt\n--------\n"
@@ -384,7 +404,7 @@ class Payment:  # Payment class to represent a payment for an order
                 f"Status: {'Success' if self.payment_status else 'Pending'}")
 
 class Invoice:  # Invoice class to generate invoice based on payment and order
-    def __init__(self, invoice_id, order, payment):  # Constructor with invoice details
+    def __init__(self, invoice_id, order, payment, customer, total_amount, issue_date=None, status=None):  # Constructor with invoice details
         self.invoice_id = invoice_id  # Unique invoice ID
         self.order = order  # Related Order object
         self.customer = order.customer  # Customer who made the order
@@ -445,130 +465,92 @@ class Invoice:  # Invoice class to generate invoice based on payment and order
 
 def test_case_1():
     print("--- Test Case 1 ---")
-    admin = Admin("a001", "Admin Aisha", "admin@example.com", "0508888888")
-    customer = Customer("c001", "John Doe", "john@example.com", "0501234567")
-    event = Event(10, "Tech Expo", datetime(2025, 11, 5), "Abu Dhabi", "Technology showcase")
+    admin = Admin("a001", "Admin Aisha", 23,"admin@example.com", "0508888888")
+    admin.setIsActive(ACTIVE)
+    admin.setPermission(["Add Event", "Edit Discount", "View Sales"])
+    admin.setCapacity(3)
+    customer = Customer("c001", "John Doe", 19,"john@example.com", "0501234567")
+    tickets_available = 100
+    initial_ticket_list = []
+    event = Event(10, "Tech Expo", datetime(2025, 11, 5), "Abu Dhabi", "Technology showcase", tickets_available, initial_ticket_list )
     ticket1 = Ticket(201, "Gold", 800.0, "Full Day", 2023)
     ticket2 = Ticket(202, "Silver", 400.0, "Half Day", 2024)
-    event.add_ticket("1234", "ticket_type",30.0, "validity", "2024")
-    event.add_ticket("1234", "ticket_type",30.0, "validity", "2025")
-    discount = Discount(301, 20, ["Gold"], datetime(2025, 12, 31))
-    order = Order(401, customer, discount)
+    discount = Discount(301, 5, ["Gold"], datetime(2025, 12, 31))
+    order = Order(401, customer, [],discount )
     order.add_ticket(ticket1)
-    total = order.getTotalAmount()
-    payment = Payment(501, total, "Debit Card", order, discount)
-    payment.process_payment()
-    invoice = Invoice(601, order, payment)
-
-    print("Admin:")
-    print(f"  ID: {admin.user_id}\n  "
-          f"Name: {admin.name}\n  "
-          f"Email: {admin.email}\n  "
-          f"Phone: {admin.phone_number}")
-    print("\nCustomer:")
-    print(
-        f"  ID: {customer.user_id}\n  "
-        f"Name: {customer.name}\n  "
-        f"Email: {customer.email}\n  "
-        f"Wallet Balance: {customer.wallet_balance}\n  "
-        f"Account Created: {customer.account_created}")
-    print("\nEvent:")
-    print(
-        f"  ID: {event.event_id}\n  "
-        f"Name: {event.event_name}\n  "
-        f"Date: {event.date}\n  "
-        f"Location: {event.location}\n  "
-        f"Description: {event.description}")
-    print("  Tickets:")
-    for t in event.tickets:
-        print(
-            f"    Ticket:\n      "
-            f"ID: {t.ticket_id}\n      "
-            f"Type: {t.ticket_type}\n      "
-            f"Price: {t.price}\n      "
-            f"Validity: {t.validity}\n      "
-            f"Issue Date: {t.issue_date}")
-    print("\nOrder:")
-    print(f"  ID: {order.order_id}\n  "
-          f"Date: {order.order_date}\n  "
-          f"Total After Discount: {total}")
-    print("\nPayment:")
-    print(
-        f"  ID: {payment.payment_id}\n  "
-        f"Method: {payment.method}\n  "
-        f"Status: {payment.payment_status}\n  "
-        f"Date: {payment.payment_date}")
-    print("\nInvoice:")
-    print(
-        f"  ID: {invoice.invoice_id}\n  "
-        f"Total: {invoice.total_amount}\n  "
-        f"Status: {invoice.status}\n  "
-        f"Issue Date: {invoice.issue_date}")
-
-
-def test_case_2():
-    print("\n--- Test Case 2 ---")
-    admin = Admin("a002", "Admin Omar", "omar@example.com", "0509999999")
-    customer = Customer("c002", "Sara Smith", "sara@example.com", "0507654321")
-    event = Event(11, "Food Festival", datetime(2025, 12, 10), "Sharjah", "International food stalls")
-    ticket1 = Ticket(203, "Entry", 100.0, "1 day", 2023)
-    ticket2 = Ticket(204, "VIP Entry", 300.0, "1 day", 2024)
-    event.add_ticket("1234", "ticket_type",30.0, "validity", "2024")
-    event.add_ticket("1234", "ticket_type",30.0, "validity", "2025")
-    discount = Discount(302, 15, ["VIP Entry"], datetime(2025, 12, 31))
-    order = Order(402, customer, discount)
     order.add_ticket(ticket2)
-    total = order.getTotalAmount()
-    payment = Payment(502, total, "Cash", order, discount)
+    customer.makePurchase(ticket1)  # Add to purchase history
+    total_after_discount = order.applyDiscount()
+    payment = Payment(501, total_after_discount, "Debit Card", order, discount)
     payment.process_payment()
-    invoice = Invoice(602, order, payment)
+    invoice = Invoice(601, order, payment, customer, total_after_discount, datetime.now(), "Paid" if payment.payment_status else "Pending")
 
-    print("Admin:")
+    print("-----Admin:-----")
     print(f"  ID: {admin.user_id}\n  "
           f"Name: {admin.name}\n  "
+          f"Age: {admin.age}\n  "
           f"Email: {admin.email}\n  "
           f"Phone: {admin.phone_number}")
-    print("\nCustomer:")
+    print(f"  Active: {admin.is_active}\n  "
+          f"Permissions: {admin.permissions}\n  "
+          f"Capacity: {admin.capacity}")
+
+    print("\n-----Customer:-----")
     print(
-        f"  ID: {customer.user_id}\n  "
-        f"Name: {customer.name}\n  "
-        f"Email: {customer.email}\n  "
-        f"Wallet Balance: {customer.wallet_balance}\n  "
-        f"Account Created: {customer.account_created}")
-    print("\nEvent:")
+        f"  ID: {customer.user_id}\n"
+        f"  Name: {customer.name}\n"
+        f"  Age: {customer.age}\n"        
+        f"  Email: {customer.email}\n"
+        f"  Wallet Balance: {customer.wallet_balance}\n"
+        f"  Purchase History: {[ticket.ticket_id for ticket in customer.purchase_history]}\n"
+        f"  Account Created: {customer.account_created}")
+    print("\n-----Event:-----")
     print(
         f"  ID: {event.event_id}\n  "
         f"Name: {event.event_name}\n  "
         f"Date: {event.date}\n  "
         f"Location: {event.location}\n  "
-        f"Description: {event.description}")
-    print("  Tickets:")
-    for t in event.tickets:
+        f"Description: {event.description}\n"
+        f"Available Tickets: {event.tickets_available}\n"
+        f"Number of Tickets Listed: {len(event.ticketsList)}")
+
+    print("\n-----Tickets in Order:-----")
+    for t in order.tickets:
         print(
-            f"    Ticket:\n      "
-            f"ID: {t.ticket_id}\n      "
-            f"Type: {t.ticket_type}\n      "
-            f"Price: {t.price}\n      "
-            f"Validity: {t.validity}\n      "
-            f"Issue Date: {t.issue_date}")
-    print("\nOrder:")
-    print(f"  ID: {order.order_id}\n  "
-          f"Date: {order.order_date}\n  "
-          f"Total After Discount: {total}")
-    print("\nPayment:")
-    print(
-        f"  ID: {payment.payment_id}\n  "
-        f"Method: {payment.method}\n  "
-        f"Status: {payment.payment_status}\n  "
-        f"Date: {payment.payment_date}")
-    print("\nInvoice:")
-    print(
-        f"  ID: {invoice.invoice_id}\n  "
-        f"Total: {invoice.total_amount}\n  "
-        f"Status: {invoice.status}\n  "
-        f"Issue Date: {invoice.issue_date}")
+            f"  ID: {t.ticket_id}\n"
+            f"  Type: {t.ticket_type}\n"
+            f"  Price: {t.price}\n"
+            f"  Validity: {t.validity}\n"
+            f"  Race Date: {t.race_date}")
 
+    print("\n-----Order:-----")
+    print(f"  ID: {order.order_id}\n"
+          f"    Customer Name: {order.customer.name}\n"
+          f"    Tickets: {[ticket.ticket_id for ticket in order.tickets]}\n"
+          f"  Total Amount Before Discount: {sum(ticket.price for ticket in order.getTickets())}\n"
+          f"  Discount Applied: {discount.percentage}%\n"
+          f"  Total After Discount: {total_after_discount}\n"
+          f"  Order Date: {order.order_date}")
 
-# Run Test Cases
+    print("\n-----Payment:-----")
+    print(
+        f"  ID: {payment.payment_id}\n"
+        f"  Method: {payment.method}\n"
+        f"  Status: {payment.payment_status}\n"
+        f"  Date: {payment.payment_date}\n"
+        f"  Original Amount: {payment.original_amount} AED\n"
+        f"  Discount Applied: {discount.percentage}%\n"
+        f"  Amount After Discount: {order.applyDiscount()} AED\n"
+        f"  Order Ref: {payment.order.order_id}\n")
+
+    print("\n-----Invoice:-----")
+    print(f"  ID: {invoice.invoice_id}\n"
+          f"  Customer Name: {invoice.customer.name}\n"
+          f"  Order Ref: {invoice.order.order_id}\n"
+          f"  Payment Ref: {invoice.payment.payment_id}\n"
+          f"  Total: {invoice.total_amount}\n"
+          f"  Status: {invoice.status}\n"
+          f"  Issue Date: {invoice.issue_date}\n"
+          f"  Is Paid?: {invoice.isPaid()}")
+
 test_case_1()
-test_case_2()
