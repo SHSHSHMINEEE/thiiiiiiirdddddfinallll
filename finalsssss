@@ -7,78 +7,78 @@ class User:
         self.email = email # User's email address
         self.phone_number = phone_number # Contact phone number
         
-    def getUserId(self):
-        return self.user_id
-    def setUserId(self, user_id):
-        self.user_id = user_id
+    def getUserId(self): # Getter method to access user_id
+        return self.user_id # Return the user's unique ID
+    def setUserId(self, user_id): # Setter method to modify user_id
+        self.user_id = user_id # Set the user's ID
 
-    def getName(self):
-        return self.name
-    def setName(self, name):
-        self.name = name
+    def getName(self): # Getter method to access name
+        return self.name # Return the user's full name
+    def setName(self, name): # Setter method to modify name
+        self.name = name # Set the user's name
 
-    def getEmail(self):
-        return self.email
-    def setEmail(self, email):
-        self.email = email
+    def getEmail(self): # Getter method to access email
+        return self.email # Return the user's email address
+    def setEmail(self, email): # Setter method to modify email
+        self.email = email # Set the user's email address
 
-    def getPhoneNumber(self):
-        return self.phone_number
-    def setPhoneNumber(self, phone_number):
-        self.phone_number = phone_number
+    def getPhoneNumber(self): # Getter method to access phone number
+        return self.phone_number # Return the user's contact number
+    def setPhoneNumber(self, phone_number): # Setter method to modify phone number
+        self.phone_number = phone_number # Set the user's contact number
         
 
-class Customer(User): # Customer inheritence from User
-    def __init__(self, user_id, name, email, phone_number):
-        super().__init__(user_id, name, email, phone_number)
-        self.purchase_history = [] # List to track past orders
+class Customer(User): # Customer class that extends the User class
+    def __init__(self, user_id, name, email, phone_number): # Constructor with inherited parameters
+        super().__init__(user_id, name, email, phone_number) # Call parent constructor
+        self.purchase_history = [] # List to track past orders 
         self.account_created = datetime.now() # Account creation timestamp
         self.wallet_balance = 0.0 # Initial wallet balance
         
-    def getPurchaseHistory(self):
-        return self.purchase_history
+    def getPurchaseHistory(self): # Getter for purchase_history
+        return self.purchase_history # Return the list of past purchases
 
-    def setPurchaseHistory(self, purchase_history):
-        self.purchase_history = purchase_history
+    def setPurchaseHistory(self, purchase_history): # Setter for purchase_history
+        self.purchase_history = purchase_history # Set the purchase history
 
-    def getAccountCreated(self):
-        return self.account_created
+    def getAccountCreated(self): # Getter for account_created timestamp
+        return self.account_created # Return the account creation timestamp
 
-    def setAccountCreated(self, account_created):
-        self.account_created = account_created
+    def setAccountCreated(self, account_created): # Setter for account_created timestamp
+        self.account_created = account_created # Set the account creation date
 
-    def getWalletBalance(self):
-        return self.wallet_balance
+    def getWalletBalance(self): # Getter for wallet_balance
+        return self.wallet_balance # Return the wallet balance amount
 
-    def setWalletBalance(self, wallet_balance):
-        self.wallet_balance = wallet_balance
+    def setWalletBalance(self, wallet_balance): # Setter for wallet_balance
+        self.wallet_balance = wallet_balance # Set the wallet balance amount
         
 
-class Admin(User): # Admin inheritence from User
-    def __init__(self, user_id, name, email, phone_number):
-        super().__init__(user_id, name, email, phone_number)
-        self.is_active = True # Admin account status
-        self.permissions = [] # List of permission strings
-        self.capacity = 0 # Admin management capacity or level
+class Admin(User): # Admin class that extends the User class
+    def __init__(self, user_id, name, email, phone_number): # Constructor with inherited parameters
+        super().__init__(user_id, name, email, phone_number) # Call parent constructor
+        self.is_active = True # Flag to check if admin account is active
+        self.permissions = []  # List of admin permissions
+        self.capacity = 0 # Admin responsibility level or load
         
 
-    def getIsActive(self):
-        return self.is_active
+    def getIsActive(self): # Getter for is_active flag
+        return self.is_active # Return True if admin is active
 
-    def setIsActive(self, is_active):
-        self.is_active = is_active
+    def setIsActive(self, is_active): # Setter for is_active flag
+        self.is_active = is_active # Set admin active status
 
-    def getPermission(self):
-        return self.permissions
+    def getPermission(self): # Getter for permissions list
+        return self.permissions # Return the list of permissions
 
-    def setPermission(self, permissions):
-        self.permissions = permissions
+    def setPermission(self, permissions): # Setter for permissions list
+        self.permissions = permissions # Set the list of permissions
 
-    def getCapacity(self):
-        return self.capacity
+    def getCapacity(self): # Getter for admin capacity
+        return self.capacity # Return the capacity value
 
-    def setCapacity(self, capacity):
-        self.capacity = capacity
+    def setCapacity(self, capacity): # Setter for admin capacity
+        self.capacity = capacity # Set the capacity value
         
 class Ticket:# Ticket Class
     def __init__(self, ticket_id, ticket_type, price, validity):
